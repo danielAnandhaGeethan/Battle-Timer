@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './App.css';
 import backgroundImage from "./battle-bg.png"; // Import the image
 
 function TimerApp() {
@@ -49,9 +50,11 @@ function TimerApp() {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    return `${hours > 0 ? `${hours}:` : ""}${
+    return `${hours > 0 ? `${hours} : ` : ""}${
       hours > 0 && minutes < 10 ? `0${minutes}` : minutes
-    }:${seconds < 10 ? `0${seconds}` : seconds}`;
+    } : ${seconds < 10 ? `0${seconds}` : seconds}`
+      .split("")
+      .join(" ");
   };
 
   // Check if timer should flicker based on time remaining
@@ -61,20 +64,29 @@ function TimerApp() {
     <div className="w-screen h-screen flex items-center justify-center overflow-hidden bg-gray-800 text-white relative">
       {/* Background Image */}
       <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+        className="absolute inset-0 bg-center"
         style={{
           backgroundImage: `url(${backgroundImage})`,
-          backgroundAttachment: "fixed", // Ensure the background stays fixed
+          backgroundAttachment: "fixed",
+          backgroundSize: "contain", // Ensure the entire image fits within the screen
+          backgroundRepeat: "no-repeat", // Prevent tiling of the image
+          height: "100vh", // Full height of the viewport
+          width: "100vw", // Full width of the viewport
         }}
       ></div>
 
       {/* Timer Display - Always Centered */}
       <div
-        className={`absolute flex items-center justify-center text-6xl font-bold ${
-          shouldFlicker ? "flicker" : ""
-        }`}
+        className={`absolute flex items-center justify-center font-bold title ${
+          shouldFlicker && isStarted ? "flicker" : ""
+        }`} style={{fontSize: "8rem"}}
       >
         {formatTime(time)}
+        <span class="drop"></span>
+        <span class="drop"></span>
+        <span class="drop"></span>
+        <span class="drop"></span>
+        <span class="drop"></span>
       </div>
 
       {/* Timer Controls */}
@@ -82,7 +94,7 @@ function TimerApp() {
         <div className="relative flex flex-col items-center gap-4">
           <input
             type="number"
-            className="text-black p-2 rounded"
+            className="text-black p-2 rounded focus:outline-none"
             placeholder="Set time (in seconds)"
             onChange={(e) => setTime(Number(e.target.value))}
           />
